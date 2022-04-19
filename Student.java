@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class Student extends Course {
     public String fullname,mobile,address;
     public int id,stage;
@@ -49,6 +51,17 @@ public class Student extends Course {
 
     public void setStage(int stage) {
         this.stage = stage;
+    }
+
+    public static void update_student_data(String path, ArrayList<Student> students){
+        Writer.clear_data(path);
+        for (Student student : students)
+            Writer.import_data(path, student.toString());
+    }
+
+    @Override
+    public String toString(){
+        return getId()+ "," +getFullname() + "," +getAddress() + "," +getStage() + getMobile() + "," + super.toString();
     }
 
 }

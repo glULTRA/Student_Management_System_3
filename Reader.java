@@ -1,5 +1,6 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.util.ArrayList;
 
 public class Reader 
 {
@@ -34,6 +35,35 @@ public class Reader
             System.out.println("File is empty !");
             Writer.import_data(path, null);
             return true;
+        }
+    }
+
+    public static void load_from_file(ArrayList<Student> students, String student_file)
+    {
+        try {
+            String student_data = reader(student_file);
+            String []student_data_array = student_data.split("[, \n]");
+            int j = 0;
+            for (int i = 0; i < student_data_array.length/10; i++) 
+            {
+                Student student = new Student();
+                String courses[] = new String[5];
+                student.setId(Integer.parseInt(student_data_array[j++]));
+                student.setFullname(student_data_array[j++]);
+                student.setAddress(student_data_array[j++]);
+                student.setStage(Integer.parseInt(student_data_array[j++]));
+                student.setMobile(student_data_array[j++]);
+                courses[0] = student_data_array[j++];
+                courses[1] = student_data_array[j++];
+                courses[2] = student_data_array[j++];
+                courses[3] = student_data_array[j++];
+                courses[4] = student_data_array[j++];
+                student.setCourses(courses);
+                students.add(student);
+            }
+
+        } catch (Exception e) {
+
         }
     }
     

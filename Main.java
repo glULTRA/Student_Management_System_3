@@ -1,7 +1,11 @@
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
 
+import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
@@ -19,12 +23,49 @@ import java.awt.*;
 
 public class Main 
 {
-    public static String titles[] = {"ID", "Fullname", "Address", "Mobile", "Stage"};
-    static DefaultTableModel model = new DefaultTableModel(titles, 0);
+    public static String titles[] = {"ID", "Fullname", "Address", "Stage", "Mobile"};
+    public static DefaultTableModel model = new DefaultTableModel(titles, 0);
+    public static final String file_name = "students.csv";
+    public static String course_titles[] = {"Courses", "Number of students"};
+    public static DefaultTableModel course_model = new DefaultTableModel(course_titles, 0);
+
+    public static void add_new_row_to_model(Student student, DefaultTableModel model){
+        model.addRow(
+            new Object[]{
+                student.getId(),
+                student.getFullname(),
+                student.getAddress(),
+                student.getStage(),
+                student.getMobile(),
+            }
+        );
+    }
+    public static void add_new_row_to_course_model(Student student, DefaultTableModel model)
+    {
+        model.addRow(
+            new Object[]{
+                student.getCourseDataList(index);
+            }
+        );
+    }
     public static void main(String[] args) 
     {
+        // My data in arraylist.
+        ArrayList<Student> students = new ArrayList<Student>();
+
+        // Loading all data from the file.
+        Reader.load_from_file(students, file_name);
+
+        // Adding the data from ArrayList to table.
+        for (Student student : students){
+            add_new_row_to_model(student, model);
+            add_new_row_to_course_model(student, model);
+        }
+        
         // Making a new Window
         JFrame window = new JFrame("ISE Student Management System");
+
+        // Window's configurations
         window.setSize(612,830);
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);        
         window.setLayout(null);
@@ -67,6 +108,14 @@ public class Main
         add_button.setFocusPainted(false);
         add_button.setBackground(new Color(180, 225, 151));
         add_button.setBounds(90, 370, 100,30);
+
+
+        add_button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Creating new window for adding a new student.
+            }
+        });
         
         // Edit Button
         JButton edit_button = new JButton("Edit");
@@ -75,12 +124,28 @@ public class Main
         edit_button.setBackground(new Color(233, 239, 192));
         edit_button.setBounds(220, 370, 100,30);
 
+        edit_button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // New Window for editing data
+                
+            }
+        });
+
         // Delete Button
         JButton delete_button = new JButton("Delete");
         Design.font(delete_button);
         delete_button.setFocusPainted(false);
         delete_button.setBackground(new Color(239, 242, 236));
         delete_button.setBounds(350, 370, 100,30);
+
+        delete_button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Delete selected item.
+                
+            }
+        });
 
         // Table container
         JTable table = new JTable(model);
@@ -89,6 +154,9 @@ public class Main
         table.setFillsViewportHeight(true);
         table.setShowGrid(false);
         table.setIntercellSpacing(new Dimension(0, 0));
+        table.putClientProperty("terminateEditOnFocusLost", true);
+        
+
         Design.font(table.getTableHeader());
         Design.font(table);
 
@@ -110,8 +178,6 @@ public class Main
 
 
         // Course Model
-        String course_titles[] = {"Courses", "Number of students"};
-        DefaultTableModel course_model = new DefaultTableModel(course_titles, 0);
 
 
         // Table container
@@ -121,6 +187,8 @@ public class Main
         table2.setFillsViewportHeight(true);
         table2.setShowGrid(false);
         table2.setIntercellSpacing(new Dimension(0, 0));
+        table2.putClientProperty("terminateEditOnFocusLost", true);
+
         Design.font(table2.getTableHeader());
         Design.font(table2);
 
@@ -173,10 +241,6 @@ public class Main
                 // TODO Auto-generated method stub
                 System.out.println("keyPressed");
             }
-        });
-
-        model.addRow(new Object[]{
-            "Hello World"
         });
 
         // Adding components to tab1
