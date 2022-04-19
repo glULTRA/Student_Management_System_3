@@ -3,6 +3,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -46,34 +47,6 @@ public class Main
         insider_panel.setBackground(new Color(6, 154, 142));
         insider_panel.setBounds(0, 115, 612, 620);
         insider_panel.setLayout(null);
-
-        // Search bar
-        JTextField search_bar = new JTextField("Search");
-        search_bar.setOpaque(false);
-        search_bar.setBorder(new Design(25));
-        search_bar.setForeground(Color.WHITE);
-        search_bar.setBounds(370, 50, 200,70);
-        Design.font(search_bar);
-
-        search_bar.addKeyListener(new KeyListener(){
-            @Override
-            public void keyTyped(KeyEvent e) {
-                // TODO Auto-generated method stub
-                System.out.println("keyTyped");
-            }
-
-            @Override
-            public void keyReleased(KeyEvent e) {
-                // TODO Auto-generated method stub
-                System.out.println("keyReleased");
-            }
-
-            @Override
-            public void keyPressed(KeyEvent e) {
-                // TODO Auto-generated method stub
-                System.out.println("keyPressed");
-            }
-        });
 
 
         // Tap buttons
@@ -128,13 +101,83 @@ public class Main
         Tpanel.setBorder(null);
 
         Tpanel.add(scrollPane);
-
         
 
         // tap2
         JPanel tap2 = new JPanel();
-        tap2.setBackground(new Color(255,255,255));
+        tap2.setBackground(new Color(6, 154, 142));
         tap2.setLayout(null);
+
+
+        // Course Model
+        String course_titles[] = {"Courses", "Number of students"};
+        DefaultTableModel course_model = new DefaultTableModel(course_titles, 0);
+
+
+        // Table container
+        JTable table2 = new JTable(course_model);
+        table2.setBackground(new Color(161, 227, 216));
+        table2.getTableHeader().setBackground(new Color(210, 252, 245));
+        table2.setFillsViewportHeight(true);
+        table2.setShowGrid(false);
+        table2.setIntercellSpacing(new Dimension(0, 0));
+        Design.font(table2.getTableHeader());
+        Design.font(table2);
+
+
+        // Scroll panel for table
+        JScrollPane scrollPane2 = new JScrollPane(table2);
+        JPanel Tpanel2=new JPanel();
+        Tpanel2.setBounds(0, 0, 541, 360);
+        Tpanel2.setLayout(new BorderLayout());
+        Tpanel2.setBorder(null);
+
+        Tpanel2.add(scrollPane2);
+
+
+
+        // Search Engines !
+        // 1st Search by Selecting stages.
+        String stages[] = {"1", "2", "3", "4", "All Stage"};
+        JComboBox<String> stage = new JComboBox<>(stages);
+        stage.setOpaque(false);
+        stage.setFocusable(false);
+        stage.setBackground(new Color(255,255,255));
+        stage.setBorder(new Design(10));
+        stage.setBounds(430, 40, 130,50);
+        stage.setSelectedIndex(4);
+
+        // 2nd Search by typing...
+        JTextField search_bar = new JTextField("Search");
+        search_bar.setOpaque(false);
+        search_bar.setBorder(new Design(25));
+        search_bar.setForeground(Color.WHITE);
+        search_bar.setBounds(33, 40, 200,70);
+        Design.font(search_bar);
+
+        search_bar.addKeyListener(new KeyListener(){
+            @Override
+            public void keyTyped(KeyEvent e) {
+                // TODO Auto-generated method stub
+                System.out.println("keyTyped");
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                // TODO Auto-generated method stub
+                System.out.println("keyReleased");
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                // TODO Auto-generated method stub
+                System.out.println("keyPressed");
+            }
+        });
+
+        model.addRow(new Object[]{
+            "Hello World"
+        });
 
         // Adding components to tab1
         tap1.add(add_button);
@@ -142,12 +185,19 @@ public class Main
         tap1.add(delete_button);
         tap1.add(Tpanel);
 
+        // Adding components to tab2
+        //tap1.add(add_button);
+        //tap1.add(edit_button);
+        //tap1.add(delete_button);
+        tap2.add(Tpanel2);
+
         // Adding components to taps
         tabs.add("Student", tap1);
         tabs.add("Course", tap2);
 
         // Adding components to insider
         insider_panel.add(search_bar);
+        insider_panel.add(stage);
         insider_panel.add(tabs);
 
         // Adding components to background
@@ -168,7 +218,7 @@ class Design implements Border
         this.r = r;
     }
     public static void font(JComponent comp){
-        comp.setFont(new Font("TimesRoman", Font.BOLD | Font.ITALIC, 20));
+        comp.setFont(new Font("TimesRoman", Font.BOLD | Font.ITALIC, 17));
     } 
     public Insets getBorderInsets(Component c) {
         return new Insets(this.r+1, this.r+1, this.r+2, this.r);
