@@ -1,22 +1,30 @@
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
 
 import javax.swing.Action;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
+import javax.swing.event.AncestorEvent;
+import javax.swing.event.AncestorListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
 import java.awt.*;
@@ -79,6 +87,7 @@ public class Main
 
         // Window's configurations
         window.setSize(612,830);
+        window.setBounds(500, 20, 612,830);
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);        
         window.setLayout(null);
         window.setResizable(false);
@@ -106,7 +115,7 @@ public class Main
         JTabbedPane tabs = new JTabbedPane();
         tabs.setBounds(29, 130, 541, 445);
         tabs.setBackground(Color.WHITE);
-        Design.font(tabs);
+        Design.font(tabs, 17);
         
         // tap1
         JPanel tap1 = new JPanel();
@@ -116,7 +125,7 @@ public class Main
         // Buttons
         // Add button
         JButton add_button = new JButton("+ Add");
-        Design.font(add_button);
+        Design.font(add_button, 17);
         add_button.setFocusPainted(false);
         add_button.setBackground(new Color(180, 225, 151));
         add_button.setBounds(90, 370, 100,30);
@@ -126,17 +135,181 @@ public class Main
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Creating new window for adding a new student.
+                JFrame student_window = new JFrame();
+                student_window.setLayout(null);
+                student_window.setBounds(500, 20, 612,830);
+                student_window.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                student_window.getContentPane().setBackground(new Color(0, 85, 85));
+                student_window.setResizable(false);
+
+                // Title
+                JLabel title = new JLabel("<html><h1 align=\"center\">Adding a new Student</h1><hr></html>");
+                title.setForeground(Color.WHITE);
+                title.setBounds(170,27, 500, 64);
+
+                // Form panel
+                JPanel form = new JPanel();
+                form.setBounds(0, 100, 612, 600);
+                form.setBackground(new Color(6, 154, 142));
+                form.setLayout(null);
+
+                // ID label
+                JLabel id_label = new JLabel("ID:");
+                Design.font(id_label, 20);
+                id_label.setBounds(30, 20, 100, 20);
+                id_label.setForeground(new Color(210, 252, 245));
+
+                // ID text
+                JTextField id_text = new JTextField();
+                Design.font(id_text, 17);
+                id_text.setBounds(30, 50, 200, 70);
+                id_text.setOpaque(false);
+                id_text.setBorder(new Design(25));
+                id_text.setForeground(new Color(210, 252, 245));
+
+                // Fullname label
+                JLabel fullname = new JLabel("Fullname:");
+                Design.font(fullname, 20);
+                fullname.setBounds(30, 130, 100, 20);
+                fullname.setForeground(new Color(210, 252, 245));
+
+                // Fullname text
+                JTextField fullname_text = new JTextField();
+                Design.font(fullname_text, 17);
+                fullname_text.setBounds(30, 160, 200, 70);
+                fullname_text.setOpaque(false);
+                fullname_text.setBorder(new Design(25));
+                fullname_text.setForeground(new Color(210, 252, 245));
+
+                // Address label
+                JLabel address = new JLabel("Address:");
+                Design.font(address, 20);
+                address.setBounds(30, 240, 100, 20);
+                address.setForeground(new Color(210, 252, 245));
+
+                // Address text
+                JTextField address_text = new JTextField();
+                Design.font(address_text, 17);
+                address_text.setBounds(30, 270, 200, 70);
+                address_text.setOpaque(false);
+                address_text.setBorder(new Design(25));
+                address_text.setForeground(new Color(210, 252, 245));
+
+                // Address label
+                JLabel phone = new JLabel("Phone Number:");
+                Design.font(phone, 20);
+                phone.setBounds(30, 350, 200, 20);
+                phone.setForeground(new Color(210, 252, 245));
+
+                // Address text
+                JTextField phone_text = new JTextField();
+                Design.font(phone_text, 17);
+                phone_text.setBounds(30, 390, 200, 70);
+                phone_text.setOpaque(false);
+                phone_text.setBorder(new Design(25));
+                phone_text.setForeground(new Color(210, 252, 245));
+
+                // Stages
+                String stages[] = {"1", "2", "3", "4"};
+                JComboBox<String> stage = new JComboBox<>(stages);
+                stage.setOpaque(false);
+                stage.setFocusable(false);
+                stage.setBackground(new Color(210, 252, 245));
+                stage.setBorder(new Design(10));
+                stage.setBounds(350, 50, 130,50);
+
+                // Check box for courses
+                JLabel course_label = new JLabel("Courses:");
+                course_label.setBounds(350, 150, 100, 50);
+                Design.font(course_label, 18);
+                course_label.setForeground(new Color(210, 252, 245));
+
+                JCheckBox course_box[] = new JCheckBox[Student.stage_1_courses.length];  
+                for (int i = 0; i < course_box.length; i++) {
+                    course_box[i] = new JCheckBox(Student.stage_1_courses[i]);
+                    Design.font(course_box[i], 18);
+                    course_box[i].setBounds(350, 200 + (50 * i), 250, 20);
+                    course_box[i].setOpaque(false);
+                    course_box[i].setForeground(Color.WHITE); //247, 255, 147
+                }  
+                
+
+                // Add button
+                JButton add_student = new JButton("Add Student");
+                add_student.setBackground(new Color(247, 255, 147));
+                add_student.setBounds(190, 510, 200, 50);
+
+                stage.addActionListener(
+                    new ActionListener(){
+                        @Override
+                        public void actionPerformed(ActionEvent e){
+                            // showing courses !
+                            int selected_item = stage.getSelectedIndex() + 1;
+                            switch (selected_item) 
+                            {
+                                // Stage 1 course
+                                case 1:
+                                    for (int i = 0; i < course_box.length; i++) {
+                                        course_box[i].setText(Student.stage_1_courses[i]);
+                                    }  
+                                    break;
+                                case 2:
+                                    for (int i = 0; i < 5; i++) 
+                                    {
+                                        course_box[i].setText(Student.stage_2_courses[i]);
+                                    } 
+                                    break;
+                                case 3:
+                                    for (int i = 0; i < 5; i++) 
+                                    {
+                                        course_box[i].setText(Student.stage_3_courses[i]);
+                                    } 
+                                    break;
+                                case 4:
+                                    for (int i = 0; i < 5; i++) 
+                                    {
+                                        course_box[i].setText(Student.stage_4_courses[i]);
+                                    } 
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                    }
+                );
+
+                // Adding components to form.
+                form.add(id_label);
+                form.add(id_text);
+                form.add(fullname);
+                form.add(fullname_text);
+                form.add(address);
+                form.add(address_text);
+                form.add(phone);
+                form.add(phone_text);
+                form.add(stage);
+                form.add(course_label);
+                for (int i = 0; i < course_box.length; i++) {
+                    form.add(course_box[i]);                    
+                }
+                form.add(add_student);
+
+                // Adding components to window.
+                student_window.add(form);
+                student_window.add(title);
+                student_window.setVisible(true);
             }
         });
         
         // Edit Button
-        JButton edit_button = new JButton("Edit");
-        Design.font(edit_button);
-        edit_button.setFocusPainted(false);
-        edit_button.setBackground(new Color(233, 239, 192));
-        edit_button.setBounds(220, 370, 100,30);
+        JButton save_button = new JButton("Save");
+        Design.font(save_button, 17);
+        save_button.setFocusPainted(false);
+        save_button.setBackground(new Color(233, 239, 192));
+        save_button.setBounds(220, 370, 100,30);
+        save_button.setVisible(false);
 
-        edit_button.addActionListener(new ActionListener() {
+        save_button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // New Window for editing data
@@ -146,7 +319,7 @@ public class Main
 
         // Delete Button
         JButton delete_button = new JButton("Delete");
-        Design.font(delete_button);
+        Design.font(delete_button, 17);
         delete_button.setFocusPainted(false);
         delete_button.setBackground(new Color(239, 242, 236));
         delete_button.setBounds(350, 370, 100,30);
@@ -160,17 +333,52 @@ public class Main
         });
 
         // Table container
-        JTable table = new JTable(model);
+        JTable table = new JTable(model){
+           
+        };
         table.setBackground(new Color(161, 227, 216));
         table.getTableHeader().setBackground(new Color(210, 252, 245));
         table.setFillsViewportHeight(true);
         table.setShowGrid(false);
         table.setIntercellSpacing(new Dimension(0, 0));
         table.putClientProperty("terminateEditOnFocusLost", true);
-        
+       // table.isCellEditable(0, 0);
+        table.setSelectionBackground(new Color(247, 255, 147));
+        table.addFocusListener(
+            new FocusListener(){
 
-        Design.font(table.getTableHeader());
-        Design.font(table);
+                @Override
+                public void focusGained(FocusEvent e) {
+                    // TODO Auto-generated method stub
+                    
+                }
+
+                @Override
+                public void focusLost(FocusEvent e) {
+                    // TODO Auto-generated method stub
+                    table.getSelectionModel().clearSelection();
+                    save_button.setVisible(false);
+                    
+                }
+                
+            }
+        );  
+    
+        table.getSelectionModel().addListSelectionListener(
+            new ListSelectionListener() {
+                @Override
+                public void valueChanged(ListSelectionEvent e) {
+                    if (!e.getValueIsAdjusting()) {
+                        if (table.getSelectedRow() > -1) {
+                            save_button.setVisible(true);
+                        }
+                    }              
+                }
+            }
+        );
+
+        Design.font(table.getTableHeader(), 17);
+        Design.font(table, 17);
 
 
         // Scroll panel for table
@@ -193,16 +401,21 @@ public class Main
 
 
         // Table container
-        JTable table2 = new JTable(course_model);
+        JTable table2 = new JTable(course_model){
+            public boolean isCellEditable(int rowIndex, int colIndex) {
+                return false; //Disallow the editing of any cell
+            }
+        };
         table2.setBackground(new Color(161, 227, 216));
         table2.getTableHeader().setBackground(new Color(210, 252, 245));
         table2.setFillsViewportHeight(true);
         table2.setShowGrid(false);
         table2.setIntercellSpacing(new Dimension(0, 0));
         table2.putClientProperty("terminateEditOnFocusLost", true);
-
-        Design.font(table2.getTableHeader());
-        Design.font(table2);
+        table2.isCellEditable(0, 1);
+        table2.setSelectionBackground(new Color(247, 255, 147));
+        Design.font(table2.getTableHeader(), 17);
+        Design.font(table2, 17);
 
 
         // Scroll panel for table
@@ -233,7 +446,7 @@ public class Main
         search_bar.setBorder(new Design(25));
         search_bar.setForeground(Color.WHITE);
         search_bar.setBounds(33, 40, 200,70);
-        Design.font(search_bar);
+        Design.font(search_bar,17);
 
         search_bar.addKeyListener(new KeyListener(){
             @Override
@@ -257,13 +470,13 @@ public class Main
 
         // Adding components to tab1
         tap1.add(add_button);
-        tap1.add(edit_button);
+        tap1.add(save_button);
         tap1.add(delete_button);
         tap1.add(Tpanel);
 
         // Adding components to tab2
         //tap1.add(add_button);
-        //tap1.add(edit_button);
+        //tap1.add(save_button);
         //tap1.add(delete_button);
         tap2.add(Tpanel2);
 
@@ -293,8 +506,8 @@ class Design implements Border
     Design(int r) {
         this.r = r;
     }
-    public static void font(JComponent comp){
-        comp.setFont(new Font("TimesRoman", Font.BOLD | Font.ITALIC, 17));
+    public static void font(JComponent comp, int size){
+        comp.setFont(new Font("TimesRoman", Font.BOLD | Font.ITALIC, size));
     } 
     public Insets getBorderInsets(Component c) {
         return new Insets(this.r+1, this.r+1, this.r+2, this.r);
