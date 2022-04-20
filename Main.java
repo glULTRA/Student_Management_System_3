@@ -25,6 +25,7 @@ import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import java.awt.*;
@@ -220,7 +221,7 @@ public class Main
 
                 // Check box for courses
                 JLabel course_label = new JLabel("Courses:");
-                course_label.setBounds(350, 150, 100, 50);
+                course_label.setBounds(350, 170, 100, 50);
                 Design.font(course_label, 18);
                 course_label.setForeground(new Color(210, 252, 245));
 
@@ -228,7 +229,7 @@ public class Main
                 for (int i = 0; i < course_box.length; i++) {
                     course_box[i] = new JCheckBox(Student.stage_1_courses[i]);
                     Design.font(course_box[i], 18);
-                    course_box[i].setBounds(350, 200 + (50 * i), 250, 20);
+                    course_box[i].setBounds(350, 230 + (45 * i), 250, 20);
                     course_box[i].setOpaque(false);
                     course_box[i].setForeground(Color.WHITE); //247, 255, 147
                 }  
@@ -249,27 +250,20 @@ public class Main
                             {
                                 // Stage 1 course
                                 case 1:
-                                    for (int i = 0; i < course_box.length; i++) {
+                                    for (int i = 0; i < course_box.length; i++)
                                         course_box[i].setText(Student.stage_1_courses[i]);
-                                    }  
                                     break;
                                 case 2:
                                     for (int i = 0; i < 5; i++) 
-                                    {
                                         course_box[i].setText(Student.stage_2_courses[i]);
-                                    } 
                                     break;
                                 case 3:
                                     for (int i = 0; i < 5; i++) 
-                                    {
                                         course_box[i].setText(Student.stage_3_courses[i]);
-                                    } 
                                     break;
                                 case 4:
                                     for (int i = 0; i < 5; i++) 
-                                    {
                                         course_box[i].setText(Student.stage_4_courses[i]);
-                                    } 
                                     break;
                                 default:
                                     break;
@@ -301,6 +295,37 @@ public class Main
             }
         });
         
+        
+
+        // Table container
+        JTable table = new JTable(model);
+        table.setBackground(new Color(161, 227, 216));
+        table.getTableHeader().setBackground(new Color(210, 252, 245));
+        table.setFillsViewportHeight(true);
+        table.setShowGrid(false);
+        table.setIntercellSpacing(new Dimension(0, 0));
+        table.putClientProperty("terminateEditOnFocusLost", true);
+        //table.isCellEditable(0, 0);
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment( JLabel.CENTER );
+        table.getColumnModel().getColumn(0).setCellRenderer( centerRenderer );
+        
+        table.setSelectionBackground(new Color(247, 255, 147));
+        
+
+        Design.font(table.getTableHeader(), 17);
+        Design.font(table, 17);
+
+
+        // Scroll panel for table
+        JScrollPane scrollPane = new JScrollPane(table);
+        JPanel Tpanel=new JPanel();
+        Tpanel.setBounds(0, 0, 541, 360);
+        Tpanel.setLayout(new BorderLayout());
+        Tpanel.setBorder(null);
+
+        Tpanel.add(scrollPane);
+
         // Edit Button
         JButton save_button = new JButton("Save");
         Design.font(save_button, 17);
@@ -312,8 +337,7 @@ public class Main
         save_button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // New Window for editing data
-                
+                table.getSelectionModel().clearSelection();
             }
         });
 
@@ -328,22 +352,9 @@ public class Main
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Delete selected item.
-                
             }
         });
 
-        // Table container
-        JTable table = new JTable(model){
-           
-        };
-        table.setBackground(new Color(161, 227, 216));
-        table.getTableHeader().setBackground(new Color(210, 252, 245));
-        table.setFillsViewportHeight(true);
-        table.setShowGrid(false);
-        table.setIntercellSpacing(new Dimension(0, 0));
-        table.putClientProperty("terminateEditOnFocusLost", true);
-       // table.isCellEditable(0, 0);
-        table.setSelectionBackground(new Color(247, 255, 147));
         table.addFocusListener(
             new FocusListener(){
 
@@ -357,7 +368,7 @@ public class Main
                 public void focusLost(FocusEvent e) {
                     // TODO Auto-generated method stub
                     table.getSelectionModel().clearSelection();
-                    save_button.setVisible(false);
+                    //save_button.setVisible(false);
                     
                 }
                 
@@ -376,28 +387,12 @@ public class Main
                 }
             }
         );
-
-        Design.font(table.getTableHeader(), 17);
-        Design.font(table, 17);
-
-
-        // Scroll panel for table
-        JScrollPane scrollPane = new JScrollPane(table);
-        JPanel Tpanel=new JPanel();
-        Tpanel.setBounds(0, 0, 541, 360);
-        Tpanel.setLayout(new BorderLayout());
-        Tpanel.setBorder(null);
-
-        Tpanel.add(scrollPane);
         
 
         // tap2
         JPanel tap2 = new JPanel();
         tap2.setBackground(new Color(6, 154, 142));
         tap2.setLayout(null);
-
-
-        // Course Model
 
 
         // Table container
@@ -414,6 +409,8 @@ public class Main
         table2.putClientProperty("terminateEditOnFocusLost", true);
         table2.isCellEditable(0, 1);
         table2.setSelectionBackground(new Color(247, 255, 147));
+        table2.getColumnModel().getColumn(1).setCellRenderer( centerRenderer );
+        
         Design.font(table2.getTableHeader(), 17);
         Design.font(table2, 17);
 
@@ -439,6 +436,13 @@ public class Main
         stage.setBorder(new Design(10));
         stage.setBounds(430, 40, 130,50);
         stage.setSelectedIndex(4);
+
+        stage.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e){
+
+            }
+        });
 
         // 2nd Search by typing...
         JTextField search_bar = new JTextField("Search");
