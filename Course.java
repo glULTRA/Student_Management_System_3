@@ -1,36 +1,42 @@
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Course 
 {
     // Course limit is 5
     String courses[] = {"null", "null", "null", "null", "null"};
+    private int no_student;
+    private String course_name;
     static final String stage_1_courses[] = {"FIS", "C++", "AutoCad", "Computer Organization", "English"};
     static final String stage_2_courses[] = {"Photoshop", "Java", "AdobeXD", "Web-design", "Assembly"};
     static final String stage_3_courses[] = {"Network", "Data Structures", "Adobe after effect", "Data base", "SQL"};
     static final String stage_4_courses[] = {"Network Advanced", "IS", "Blender", "Machine Learning", "Oracle"};
-    public static ArrayList<String> course_collect_data = new ArrayList<String>();
 
+    Course(){}
     public void setCourses(String[] courses){
         this.courses = courses;
-        if(course_collect_data.isEmpty()){
-            for (String course : courses) {
-                course_collect_data.add(course);
-            }
-            return;
-        }
-        for (String course : courses) 
-        {
-            for (String alive_course : course_collect_data) {
-                if(course == alive_course){
-                    course_collect_data.add(course);
-                }
-            }
-        }
-        
     }
 
-    public static String getCourseDataList(int index){
-        return course_collect_data.get(index);
+    public void setNoStudent(int no_student){
+        this.no_student = no_student;
+    }
+    public int getNoStudent()
+    {
+        return this.no_student;
+    }
+
+    public String[] getCourses()
+    {
+        return this.courses;
+    }
+
+    public void setCourseName(String course_name){
+        this.course_name = course_name;
+    }
+
+    public String getCourseName(){
+        return this.course_name;
     }
 
     public String  toString(){

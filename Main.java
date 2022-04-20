@@ -26,6 +26,7 @@ public class Main
     public static String titles[] = {"ID", "Fullname", "Address", "Stage", "Mobile"};
     public static DefaultTableModel model = new DefaultTableModel(titles, 0);
     public static final String file_name = "students.csv";
+    public static final String course_file_name = "courses.txt";
     public static String course_titles[] = {"Courses", "Number of students"};
     public static DefaultTableModel course_model = new DefaultTableModel(course_titles, 0);
 
@@ -40,11 +41,15 @@ public class Main
             }
         );
     }
-    public static void add_new_row_to_course_model(Student student, DefaultTableModel model)
+    public static void add_new_row_to_course_model(Course course, DefaultTableModel model)
     {
+        if (course.getNoStudent() == 0) {
+            return;
+        }
         model.addRow(
             new Object[]{
-                student.getCourseDataList(index);
+                course.getCourseName(),
+                course.getNoStudent()
             }
         );
     }
@@ -52,15 +57,22 @@ public class Main
     {
         // My data in arraylist.
         ArrayList<Student> students = new ArrayList<Student>();
+        ArrayList<Course> courses = new ArrayList<Course>();
 
         // Loading all data from the file.
         Reader.load_from_file(students, file_name);
+        Reader.load_course_file(courses, course_file_name);
+
+        System.out.println(courses.size());
 
         // Adding the data from ArrayList to table.
-        for (Student student : students){
-            add_new_row_to_model(student, model);
-            add_new_row_to_course_model(student, model);
+        for (int i = 0; i < students.size(); i++){
+            add_new_row_to_model(students.get(i), model);
         }
+        for (int i = 0; i < courses.size(); i++){
+            add_new_row_to_course_model(courses.get(i), course_model);
+        }
+
         
         // Making a new Window
         JFrame window = new JFrame("ISE Student Management System");
