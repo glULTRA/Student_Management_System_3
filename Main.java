@@ -326,35 +326,8 @@ public class Main
                     }
                     return;
                 }
-                for (int i = 0; i < students.size(); i++) 
-                {
-                    String name = students.get(i).getFullname().toLowerCase();
-                    String mobile = students.get(i).getMobile().toString();
-                    // Approch search
-                    for(int j = 0; j < text.length(); j++)
-                    {
-                        try {
-                            //if(name.length() < text.length() || text_phone.length() < mobile.length()) continue;
-                            
-                            if(text.charAt(j) == name.charAt(j) || text_phone.charAt(j) == mobile.charAt(j)){
-                                isApproached = true;
-                            }
-                            else{
-                                isApproached = false;
-                                break;
-                            }
-                        } catch (Exception e2) {
-                            isApproached = false;
-                            break;
-                        }
-                        
-                    }
-                    if(isApproached){
-                        break;
-                    }
-                    
-                }
-                if(isApproached){
+
+                if(tap1.isShowing()){
                     ArrayList<Student> collectUSers = new ArrayList<Student>();
                     for (int i = 0; i < students.size(); i++) 
                     {
@@ -364,8 +337,6 @@ public class Main
                         for (int j = 0; j < text.length(); j++) 
                         {
                             try {
-                                //if(name.length() < text.length() || text_phone.length() < mobile.length())continue;
-
                                 if(name.charAt(j) == text.charAt(j) || mobile.charAt(j) == text_phone.charAt(j)){
                                     isFound = true;
                                 }
@@ -388,8 +359,40 @@ public class Main
                     for (int i = 0; i < collectUSers.size(); i++) {
                         add_new_row_to_model(collectUSers.get(i), model);
                     }
-
                     collectUSers.clear();
+                }
+                else
+                {
+                    ArrayList<Course> collectCourses = new ArrayList<Course>();
+                    for (int i = 0; i < courses.size(); i++) 
+                    {
+                        String course = courses.get(i).getCourseName().toLowerCase();
+                        boolean isFound = false;
+                        for (int j = 0; j < text.length(); j++) 
+                        {
+                            try {
+                                if(course.charAt(j) == text.charAt(j))
+                                    isFound = true;
+                                else{
+                                    isFound = false;
+                                    break;
+                                }
+                            } catch (Exception e2) {
+                                System.out.println(e2);
+                            }
+                            
+                        }
+                        if(isFound){
+                            collectCourses.add(courses.get(i));
+                        }
+                    }
+                    course_model.getDataVector().removeAllElements();
+                    table2.getSelectionModel().clearSelection();
+                    table2.repaint();
+                    for (int i = 0; i < collectCourses.size(); i++) {
+                        add_new_row_to_course_model(collectCourses.get(i), course_model);
+                    }
+                    collectCourses.clear();
                 }
             }
 
