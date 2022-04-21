@@ -6,8 +6,9 @@ public class Reader
 {
     public static String reader(String path){
         String data = "";
+        BufferedReader reader = null;
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(path));
+            reader = new BufferedReader(new FileReader(path));
             int i;
             while((i = reader.read()) != -1){
                 data += (char)i;
@@ -17,6 +18,13 @@ public class Reader
             //JOptionPane.showMessageDialog(null, "File is empty!");
             System.out.println("File is empty !");
             return null;
+        }
+        finally{
+            try {
+                reader.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
     
@@ -63,7 +71,7 @@ public class Reader
             }
 
         } catch (Exception e) {
-
+            System.out.println(e);
         }
     }
 
@@ -84,7 +92,7 @@ public class Reader
             
 
         } catch (Exception e) {
-
+            System.out.println(e);
         }
     }
     

@@ -10,8 +10,8 @@ public class Course
     private String course_name;
     static final String stage_1_courses[] = {"FIS", "Cpp", "AutoCad", "Computer_Organization", "English"};
     static final String stage_2_courses[] = {"Photoshop", "Java", "AdobeXD", "Web-design", "Assembly"};
-    static final String stage_3_courses[] = {"Network", "Data_Structures", "Adobe_after_effect", "Data_base", "SQL"};
-    static final String stage_4_courses[] = {"Network_Advanced", "IS", "Blender", "Machine_Learning", "Oracle"};
+    static final String stage_3_courses[] = {"Network", "Data_Structures", "Adobe_after_effect", "PHP", "SQL"};
+    static final String stage_4_courses[] = {"Cyber_Security", "IS", "Blender", "Machine_Learning", "Oracle"};
 
     Course(){}
     public void setCourses(String[] courses){
@@ -40,10 +40,16 @@ public class Course
     }
 
     public static void update_courses(String file, ArrayList<Course> courses ){
-        Writer.clear_data(file);
-        for (Course course : courses) {
-            Writer.import_data(file,  course.getNoStudent() + "," + course.getCourseName());
+        String data = "";
+        for (int i = 0; i < courses.size(); i++) {
+            if(i != courses.size()-1)
+                data +=  courses.get(i).getNoStudent() + "," + courses.get(i).getCourseName() + "\n";
+            else
+                data +=  courses.get(i).getNoStudent() + "," + courses.get(i).getCourseName();
         }   
+        Writer.clear_data(file);
+        Writer.import_data(file, data);
+
     }
 
     public String  toString(){

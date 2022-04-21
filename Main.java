@@ -127,7 +127,336 @@ public class Main
         add_button.setFocusPainted(false);
         add_button.setBackground(new Color(180, 225, 151));
         add_button.setBounds(90, 370, 100,30);
+        
 
+        // Table container
+        JTable table = new JTable(model);
+        table.setBackground(new Color(161, 227, 216));
+        table.getTableHeader().setBackground(new Color(210, 252, 245));
+        table.setFillsViewportHeight(true);
+        table.setShowGrid(false);
+        table.setIntercellSpacing(new Dimension(0, 0));
+        table.putClientProperty("terminateEditOnFocusLost", true);
+        //table.isCellEditable(0, 0);
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment( JLabel.CENTER );
+        table.getColumnModel().getColumn(0).setCellRenderer( centerRenderer );
+        
+        table.setSelectionBackground(new Color(247, 255, 147));
+        
+
+        Design.font(table.getTableHeader(), 17);
+        Design.font(table, 17);
+
+
+        // Scroll panel for table
+        JScrollPane scrollPane = new JScrollPane(table);
+        JPanel Tpanel=new JPanel();
+        Tpanel.setBounds(0, 0, 541, 360);
+        Tpanel.setLayout(new BorderLayout());
+        Tpanel.setBorder(null);
+
+        Tpanel.add(scrollPane);
+
+        // Edit Button
+        JButton save_button = new JButton("Save");
+        Design.font(save_button, 17);
+        save_button.setFocusPainted(false);
+        save_button.setBackground(new Color(233, 239, 192));
+        save_button.setBounds(220, 370, 100,30);
+        save_button.setVisible(false);
+
+        save_button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                table.getSelectionModel().clearSelection();
+            }
+        });
+
+        // Delete Button
+        JButton delete_button = new JButton("Delete");
+        Design.font(delete_button, 17);
+        delete_button.setFocusPainted(false);
+        delete_button.setBackground(new Color(239, 242, 236));
+        delete_button.setBounds(350, 370, 100,30);
+
+        delete_button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Delete selected item.
+            }
+        });
+
+        table.addFocusListener(
+            new FocusListener(){
+
+                @Override
+                public void focusGained(FocusEvent e) {
+                    // TODO Auto-generated method stub
+                    
+                }
+
+                @Override
+                public void focusLost(FocusEvent e) {
+                    // TODO Auto-generated method stub
+                    table.getSelectionModel().clearSelection();
+                    //save_button.setVisible(false);
+                    
+                }
+                
+            }
+        );  
+    
+        table.getSelectionModel().addListSelectionListener(
+            new ListSelectionListener() {
+                @Override
+                public void valueChanged(ListSelectionEvent e) {
+                    if (!e.getValueIsAdjusting()) {
+                        if (table.getSelectedRow() > -1) {
+                            save_button.setVisible(true);
+                        }
+                    }              
+                }
+            }
+        );
+        
+
+        // tap2
+        JPanel tap2 = new JPanel();
+        tap2.setBackground(new Color(6, 154, 142));
+        tap2.setLayout(null);
+
+
+        // Table container
+        JTable table2 = new JTable(course_model){
+            public boolean isCellEditable(int rowIndex, int colIndex) {
+                return false; //Disallow the editing of any cell
+            }
+        };
+        table2.setBackground(new Color(161, 227, 216));
+        table2.getTableHeader().setBackground(new Color(210, 252, 245));
+        table2.setFillsViewportHeight(true);
+        table2.setShowGrid(false);
+        table2.setIntercellSpacing(new Dimension(0, 0));
+        table2.putClientProperty("terminateEditOnFocusLost", true);
+        table2.isCellEditable(0, 1);
+        table2.setSelectionBackground(new Color(247, 255, 147));
+        table2.getColumnModel().getColumn(1).setCellRenderer( centerRenderer );
+        
+        Design.font(table2.getTableHeader(), 17);
+        Design.font(table2, 17);
+
+
+        // Scroll panel for table
+        JScrollPane scrollPane2 = new JScrollPane(table2);
+        JPanel Tpanel2=new JPanel();
+        Tpanel2.setBounds(0, 0, 541, 360);
+        Tpanel2.setLayout(new BorderLayout());
+        Tpanel2.setBorder(null);
+
+        Tpanel2.add(scrollPane2);
+
+
+
+        // Search Engines !
+        // 1st Search by Selecting stages.
+        String stages[] = {"1", "2", "3", "4", "All Stage"};
+        JComboBox<String> stage = new JComboBox<>(stages);
+        stage.setOpaque(false);
+        stage.setFocusable(false);
+        stage.setBackground(new Color(255,255,255));
+        stage.setBorder(new Design(10));
+        stage.setBounds(430, 40, 130,50);
+        stage.setSelectedIndex(4);
+
+        stage.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e){
+
+            }
+        });
+
+        // 2nd Search by typing...
+        JTextField search_bar = new JTextField("Search");
+        search_bar.setOpaque(false);
+        search_bar.setBorder(new Design(25));
+        search_bar.setForeground(Color.WHITE);
+        search_bar.setBounds(33, 40, 200,70);
+        Design.font(search_bar,17);
+
+        search_bar.addKeyListener(new KeyListener(){
+            @Override
+            public void keyTyped(KeyEvent e) {
+                // TODO Auto-generated method stub
+                String text = search_bar.getText().toString().toLowerCase();
+                String text_phone = search_bar.getText().toString();
+                int foundID = 0;
+                boolean isSearchFound = false;
+                boolean isApproached = false;
+                if(text.isEmpty()){
+                    model.getDataVector().removeAllElements();
+                    table.getSelectionModel().clearSelection();
+                    table.repaint();
+                    for (Student student : students) {
+                        add_new_row_to_model(student, model);
+                    }
+                    return;
+                }
+                for (int i = 0; i < students.size(); i++) 
+                {
+                    String fullname = students.get(i).getFullname().toLowerCase();
+                    String mobile = students.get(i).getMobile().toString();
+                    // Complete search
+                    if(text.equals(fullname) || text_phone.equals(mobile)){
+                        isSearchFound = true;
+                        foundID = i;
+                    }
+                    // Approch search
+                    for(int j = 0; j < text.length(); j++)
+                    {
+                        try {
+                            if(text.charAt(j) == fullname.charAt(j) || text_phone.charAt(j) == mobile.charAt(j)){
+                                isApproached = true;
+                            }
+                            else{
+                                isApproached = false;
+                                break;
+                            }
+                        } catch (Exception e2) {
+                            isApproached = false;
+                            break;
+                        }
+                        
+                    }
+                    if(isApproached){
+                        break;
+                    }
+                    
+                }
+                if(isApproached){
+                    ArrayList<Student> collectUSers = new ArrayList<Student>();
+                    for (int i = 0; i < students.size(); i++) 
+                    {
+                        boolean isFound = false;
+                        String name = students.get(i).getFullname().toLowerCase();
+                        String mobile = students.get(i).getMobile();
+                        for (int j = 0; j < text.length(); j++) 
+                        {
+                            if(name.charAt(j) == text.charAt(j) || mobile.charAt(j) == text_phone.charAt(j)){
+                                isFound = true;
+                            }
+                            else{
+                                isFound = false;
+                                break;
+                            }
+                        }
+                        if(isFound){
+                            collectUSers.add(students.get(i));
+                        }
+                    }
+                    model.getDataVector().removeAllElements();
+                    table.getSelectionModel().clearSelection();
+                    table.repaint();
+                    for (int i = 0; i < collectUSers.size(); i++) {
+                        add_new_row_to_model(collectUSers.get(i), model);
+                    }
+
+                    collectUSers.clear();
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+            }
+        });
+
+        stage.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e){
+                // Go for new data
+                int selected_stage = stage.getSelectedIndex() + 1;
+                
+                if(tap1.isShowing()){
+                    model.getDataVector().removeAllElements();
+                    table.repaint();
+                    if(selected_stage == 5){
+                        for (Student student : students) {
+                            add_new_row_to_model(student, model);
+                        }
+                    }else
+                    {
+                        for (Student student : students)
+                        {
+                            if(student.getStage() ==  selected_stage)
+                            {
+                                add_new_row_to_model(student, model);
+                            }
+                        }
+                    }
+                    table.getSelectionModel().clearSelection(); 
+                    
+                }else{
+                    course_model.getDataVector().removeAllElements();
+                    table2.repaint();
+                    if(selected_stage == 5){
+                        for (Course course : courses) {
+                            add_new_row_to_course_model(course, course_model);
+                        }
+                    }else
+                    {
+                        switch (selected_stage) {
+                            case 1:
+                                for (Course course : courses) {
+                                    for (String cs : Course.stage_1_courses)
+                                    {
+                                        if(course.getCourseName().contains(cs)){
+                                            add_new_row_to_course_model(course, course_model);
+                                        }
+                                    }
+                                }
+                                break;
+                            case 2:
+                                for (Course course : courses) {
+                                    for (String cs : Course.stage_2_courses)
+                                    {
+                                        if(course.getCourseName().contains(cs)){
+                                            add_new_row_to_course_model(course, course_model);
+                                        }
+                                    }
+                                }
+                                break;
+                            case 3:
+                                for (Course course : courses) {
+                                    for (String cs : Course.stage_3_courses)
+                                    {
+                                        if(course.getCourseName().contains(cs)){
+                                            add_new_row_to_course_model(course, course_model);
+                                        }
+                                    }
+                                }
+                                break;
+                            case 4:
+                                for (Course course : courses) {
+                                    for (String cs : Course.stage_4_courses)
+                                    {
+                                        if(course.getCourseName().contains(cs)){
+                                            add_new_row_to_course_model(course, course_model);
+                                        }
+                                    }
+                                }
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    table2.getSelectionModel().clearSelection();                }
+
+            }
+        });
 
         add_button.addActionListener(new ActionListener() {
             @Override
@@ -295,10 +624,9 @@ public class Main
                                     }
                                     for (int j = 0; j < courses.size(); j++) 
                                     {
-                                        if (courses.get(j).getCourseName().equals(course_names[i]))
+                                        if (courses.get(j).getCourseName().contains(course_names[i]))
                                         {
                                             System.out.println(courses.get(j).getCourseName());
-
                                             courses.get(j).setNoStudent(courses.get(j).getNoStudent() + 1);
                                         }
                                     }
@@ -313,17 +641,28 @@ public class Main
                                         JOptionPane.showMessageDialog(student_window, "please fill all informations!", "Warning", JOptionPane.WARNING_MESSAGE);
                                 }
                                 else{
-                                    students.add(student);
                                     if (file_name.isEmpty()) {
                                         Writer.import_data(file_name, student.toString());
                                         
                                     }else{
                                         Writer.import_data(file_name, "\n" + student.toString());
                                     }
-
+                                    students.add(student);
+                                    
                                     Course.update_courses(course_file_name, courses);
                                     JOptionPane.showMessageDialog(student_window, "Added new student Successfuly !");
                                     id_text.setText("0");
+                                    // Refereshing tables
+                                    table2.getSelectionModel().clearSelection();
+                                    table.getSelectionModel().clearSelection();
+                                    model.getDataVector().removeAllElements();
+                                    course_model.getDataVector().removeAllElements();
+                                    for (Student student2 : students) {
+                                        add_new_row_to_model(student2, model);
+                                    }
+                                    for (Course course : courses) {
+                                        add_new_row_to_course_model(course, course_model);
+                                    }
                                     student_window.dispose();
                                 }
                             } catch (Exception e2) {
@@ -356,182 +695,6 @@ public class Main
             }
         });
         
-        
-
-        // Table container
-        JTable table = new JTable(model);
-        table.setBackground(new Color(161, 227, 216));
-        table.getTableHeader().setBackground(new Color(210, 252, 245));
-        table.setFillsViewportHeight(true);
-        table.setShowGrid(false);
-        table.setIntercellSpacing(new Dimension(0, 0));
-        table.putClientProperty("terminateEditOnFocusLost", true);
-        //table.isCellEditable(0, 0);
-        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-        centerRenderer.setHorizontalAlignment( JLabel.CENTER );
-        table.getColumnModel().getColumn(0).setCellRenderer( centerRenderer );
-        
-        table.setSelectionBackground(new Color(247, 255, 147));
-        
-
-        Design.font(table.getTableHeader(), 17);
-        Design.font(table, 17);
-
-
-        // Scroll panel for table
-        JScrollPane scrollPane = new JScrollPane(table);
-        JPanel Tpanel=new JPanel();
-        Tpanel.setBounds(0, 0, 541, 360);
-        Tpanel.setLayout(new BorderLayout());
-        Tpanel.setBorder(null);
-
-        Tpanel.add(scrollPane);
-
-        // Edit Button
-        JButton save_button = new JButton("Save");
-        Design.font(save_button, 17);
-        save_button.setFocusPainted(false);
-        save_button.setBackground(new Color(233, 239, 192));
-        save_button.setBounds(220, 370, 100,30);
-        save_button.setVisible(false);
-
-        save_button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                table.getSelectionModel().clearSelection();
-            }
-        });
-
-        // Delete Button
-        JButton delete_button = new JButton("Delete");
-        Design.font(delete_button, 17);
-        delete_button.setFocusPainted(false);
-        delete_button.setBackground(new Color(239, 242, 236));
-        delete_button.setBounds(350, 370, 100,30);
-
-        delete_button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Delete selected item.
-            }
-        });
-
-        table.addFocusListener(
-            new FocusListener(){
-
-                @Override
-                public void focusGained(FocusEvent e) {
-                    // TODO Auto-generated method stub
-                    
-                }
-
-                @Override
-                public void focusLost(FocusEvent e) {
-                    // TODO Auto-generated method stub
-                    table.getSelectionModel().clearSelection();
-                    //save_button.setVisible(false);
-                    
-                }
-                
-            }
-        );  
-    
-        table.getSelectionModel().addListSelectionListener(
-            new ListSelectionListener() {
-                @Override
-                public void valueChanged(ListSelectionEvent e) {
-                    if (!e.getValueIsAdjusting()) {
-                        if (table.getSelectedRow() > -1) {
-                            save_button.setVisible(true);
-                        }
-                    }              
-                }
-            }
-        );
-        
-
-        // tap2
-        JPanel tap2 = new JPanel();
-        tap2.setBackground(new Color(6, 154, 142));
-        tap2.setLayout(null);
-
-
-        // Table container
-        JTable table2 = new JTable(course_model){
-            public boolean isCellEditable(int rowIndex, int colIndex) {
-                return false; //Disallow the editing of any cell
-            }
-        };
-        table2.setBackground(new Color(161, 227, 216));
-        table2.getTableHeader().setBackground(new Color(210, 252, 245));
-        table2.setFillsViewportHeight(true);
-        table2.setShowGrid(false);
-        table2.setIntercellSpacing(new Dimension(0, 0));
-        table2.putClientProperty("terminateEditOnFocusLost", true);
-        table2.isCellEditable(0, 1);
-        table2.setSelectionBackground(new Color(247, 255, 147));
-        table2.getColumnModel().getColumn(1).setCellRenderer( centerRenderer );
-        
-        Design.font(table2.getTableHeader(), 17);
-        Design.font(table2, 17);
-
-
-        // Scroll panel for table
-        JScrollPane scrollPane2 = new JScrollPane(table2);
-        JPanel Tpanel2=new JPanel();
-        Tpanel2.setBounds(0, 0, 541, 360);
-        Tpanel2.setLayout(new BorderLayout());
-        Tpanel2.setBorder(null);
-
-        Tpanel2.add(scrollPane2);
-
-
-
-        // Search Engines !
-        // 1st Search by Selecting stages.
-        String stages[] = {"1", "2", "3", "4", "All Stage"};
-        JComboBox<String> stage = new JComboBox<>(stages);
-        stage.setOpaque(false);
-        stage.setFocusable(false);
-        stage.setBackground(new Color(255,255,255));
-        stage.setBorder(new Design(10));
-        stage.setBounds(430, 40, 130,50);
-        stage.setSelectedIndex(4);
-
-        stage.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e){
-
-            }
-        });
-
-        // 2nd Search by typing...
-        JTextField search_bar = new JTextField("Search");
-        search_bar.setOpaque(false);
-        search_bar.setBorder(new Design(25));
-        search_bar.setForeground(Color.WHITE);
-        search_bar.setBounds(33, 40, 200,70);
-        Design.font(search_bar,17);
-
-        search_bar.addKeyListener(new KeyListener(){
-            @Override
-            public void keyTyped(KeyEvent e) {
-                // TODO Auto-generated method stub
-                System.out.println("keyTyped");
-            }
-
-            @Override
-            public void keyReleased(KeyEvent e) {
-                // TODO Auto-generated method stub
-                System.out.println("keyReleased");
-            }
-
-            @Override
-            public void keyPressed(KeyEvent e) {
-                // TODO Auto-generated method stub
-                System.out.println("keyPressed");
-            }
-        });
 
         // Adding components to tab1
         tap1.add(add_button);
