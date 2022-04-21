@@ -4,6 +4,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
+
+import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -187,13 +189,28 @@ public class Main
  
          Tpanel2.add(scrollPane2);
 
-        // Edit Button
+        // Save Button
         JButton save_button = new JButton("Save");
         Design.font(save_button, 17);
         save_button.setFocusPainted(false);
         save_button.setBackground(new Color(233, 239, 192));
         save_button.setBounds(220, 370, 100,30);
         save_button.setVisible(false);
+
+        // Course button
+        JButton course_button = new JButton("Course");
+        Design.font(course_button, 17);
+        course_button.setFocusPainted(false);
+        course_button.setBackground(new Color(247, 255, 147));
+        course_button.setBounds(250, 590, 100,30);
+        course_button.setVisible(false);
+
+        // Delete Button
+        JButton delete_button = new JButton("Delete");
+        Design.font(delete_button, 17);
+        delete_button.setFocusPainted(false);
+        delete_button.setBackground(new Color(239, 242, 236));
+        delete_button.setBounds(350, 370, 100,30);
 
         save_button.addActionListener(new ActionListener() {
             @Override
@@ -229,12 +246,49 @@ public class Main
             }
         });
 
-        // Delete Button
-        JButton delete_button = new JButton("Delete");
-        Design.font(delete_button, 17);
-        delete_button.setFocusPainted(false);
-        delete_button.setBackground(new Color(239, 242, 236));
-        delete_button.setBounds(350, 370, 100,30);
+        course_button.addActionListener(
+            new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e){
+                    int selected_item = table.getSelectedRow();
+                    Object selected_id = table.getModel().getValueAt(selected_item, 0);
+                    int id = Integer.parseInt(selected_id.toString());
+                    String course_data = "<html><h1>" + Student.get_user_by_id(id, students) +" joined these courses :</h1>";
+                    int j = 0;
+                    course_data += "<ol>";
+                    for (Student student: students) 
+                    {
+                        if(student.getId() == id)
+                        {
+                            for (String course : student.getCourses()) 
+                            {
+                                if(!course.equals("none"))
+                                {
+                                    course_data += "<li>";
+                                    course_data += course;
+                                    course_data += "</li>";
+                                    j++;
+                                }
+                            }
+                        }
+                        
+                    }
+                    course_data += "</ol>";
+                    course_data += "</html>";
+                    if(j!=0){
+                        JOptionPane.showMessageDialog(window, course_data);
+                    }else{
+                        JOptionPane.showMessageDialog(window, "Didn't joined any course!");
+                    }
+                    table.getSelectionModel().clearSelection();
+                    save_button.setVisible(false);
+                    course_button.setVisible(false);
+                    j=0;
+                }   
+            }
+        );
+
+        
 
         delete_button.addActionListener(new ActionListener() {
             @Override
@@ -284,6 +338,7 @@ public class Main
                     if (!e.getValueIsAdjusting()) {
                         if (table.getSelectedRow() > -1) {
                             save_button.setVisible(true);
+                            course_button.setVisible(true);
                         }
                     }              
                 }
@@ -336,6 +391,7 @@ public class Main
                         String mobile = students.get(i).getMobile();
                         for (int j = 0; j < text.length(); j++) 
                         {
+                            //if(text.length() < name.length() || text_phone.length() < mobile.length()) continue;
                             try {
                                 if(name.charAt(j) == text.charAt(j) || mobile.charAt(j) == text_phone.charAt(j)){
                                     isFound = true;
@@ -567,6 +623,12 @@ public class Main
                 phone_text.setBorder(new Design(25));
                 phone_text.setForeground(new Color(210, 252, 245));
 
+                // Stage label
+                JLabel stage_label = new JLabel("Stages:");
+                Design.font(stage_label, 20);
+                stage_label.setBounds(350, 20, 200, 20);
+                stage_label.setForeground(new Color(210, 252, 245));
+
                 // Stages
                 String stages[] = {"1", "2", "3", "4"};
                 JComboBox<String> stage = new JComboBox<>(stages);
@@ -574,7 +636,7 @@ public class Main
                 stage.setFocusable(false);
                 stage.setBackground(new Color(210, 252, 245));
                 stage.setBorder(new Design(10));
-                stage.setBounds(350, 50, 130,50);
+                stage.setBounds(350, 50, 170,50);
 
                 // Check box for courses
                 JLabel course_label = new JLabel("Courses:");
@@ -712,6 +774,7 @@ public class Main
                 form.add(address_text);
                 form.add(phone);
                 form.add(phone_text);
+                form.add(stage_label);
                 form.add(stage);
                 form.add(course_label);
                 for (int i = 0; i < course_box.length; i++) {
@@ -725,6 +788,7 @@ public class Main
                 student_window.setVisible(true);
             }
         });
+        
         
 
         // Adding components to tab1
@@ -746,6 +810,7 @@ public class Main
         // Adding components to insider
         insider_panel.add(search_bar);
         insider_panel.add(stage);
+        insider_panel.add(course_button);
         insider_panel.add(tabs);
 
         // Adding components to background

@@ -53,6 +53,15 @@ public class Student extends Course {
         this.stage = stage;
     }
 
+    public static String get_user_by_id(int id, ArrayList<Student> students){
+        for (Student student : students) {
+            if(id == student.getId()){
+                return student.getFullname();
+            }
+        }
+        return "Doesnot Exit !";
+    }
+
     public static boolean id_taken(int id, ArrayList<Student> students){
         for(Student student: students){
             if(id == student.getId()){
