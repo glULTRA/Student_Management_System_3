@@ -4,8 +4,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
-
-import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -371,7 +369,6 @@ public class Main
                 // TODO Auto-generated method stub
                 String text = search_bar.getText().toString().toLowerCase();
                 String text_phone = search_bar.getText().toString();
-                boolean isApproached = false;
                 if(text.isEmpty()){
                     model.getDataVector().removeAllElements();
                     table.getSelectionModel().clearSelection();
