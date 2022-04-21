@@ -1,7 +1,8 @@
-1,Mohammed,suli,750,2,none,Java,none,none,none
-2,Muhanad,Erbil,750,2,none,Java,none,none,none
-7,Dilman,Erbil,750,2,none,Java,AdobeXD,none,none
-4,Sleman,Duhok,751,4,none,IS,Blender,none,none
-5,Niga,Koya,751,3,none,none,Adobe_after_effect,Cyber_Security,none
-6,Rayan,Ranya,750,1,FIS,Cpp,AutoCad,Computer_Organization,English
-8,mahmood,Kerkuk,752,3,none,none,none,Cyber_Security,SQL
+1,Mohammed,Erbil,2,750,none,Java,none,none,none
+2,muhanad,Erbil,2,750,none,Java,none,none,none
+7,Dilman,Erbil,2,750,none,Java,AdobeXD,none,none
+4,Sleman,Duhok,4,751,none,IS,Blender,none,none
+5,Niga,Koya,3,751,none,none,Adobe_after_effect,Cyber_Security,none
+6,Rayan,Ranya,1,750,FIS,Cpp,AutoCad,Computer_Organization,English
+8,mahmood,Kerkuk,3,752,none,none,none,Cyber_Security,SQL
+9,Nigar,Suli,1,750,none,Cpp,none,none,English

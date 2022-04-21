@@ -1,13 +1,9 @@
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
-
-import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -21,8 +17,6 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
-import javax.swing.event.AncestorEvent;
-import javax.swing.event.AncestorListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -221,9 +215,9 @@ public class Main
                         }else if(j == 2){
                             students.get(i).setAddress(infos.toString());
                         }else if(j == 3){
-                            students.get(i).setMobile(infos.toString());
-                        }else if(j == 4){
                             students.get(i).setStage(Integer.parseInt(infos.toString()));
+                        }else if(j == 4){
+                            students.get(i).setMobile(infos.toString());
                         }
                     }
                     Student.update_student_data(file_name, students);
@@ -283,26 +277,6 @@ public class Main
             }
         });
 
-        table.addFocusListener(
-            new FocusListener(){
-
-                @Override
-                public void focusGained(FocusEvent e) {
-                    // TODO Auto-generated method stub
-                    
-                }
-
-                @Override
-                public void focusLost(FocusEvent e) {
-                    // TODO Auto-generated method stub
-                   // table.getSelectionModel().clearSelection();
-                    //save_button.setVisible(false);
-                    
-                }
-                
-            }
-        );  
-    
         table.getSelectionModel().addListSelectionListener(
             new ListSelectionListener() {
                 @Override
@@ -317,10 +291,6 @@ public class Main
         );
         
 
-       
-
-
-
         // Search Engines !
         // 1st Search by Selecting stages.
         String stages[] = {"1", "2", "3", "4", "All Stage"};
@@ -331,13 +301,6 @@ public class Main
         stage.setBorder(new Design(10));
         stage.setBounds(430, 40, 130,50);
         stage.setSelectedIndex(4);
-
-        stage.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e){
-
-            }
-        });
 
         // 2nd Search by typing...
         JTextField search_bar = new JTextField("Search");
@@ -353,8 +316,6 @@ public class Main
                 // TODO Auto-generated method stub
                 String text = search_bar.getText().toString().toLowerCase();
                 String text_phone = search_bar.getText().toString();
-                int foundID = 0;
-                boolean isSearchFound = false;
                 boolean isApproached = false;
                 if(text.isEmpty()){
                     model.getDataVector().removeAllElements();
@@ -367,18 +328,15 @@ public class Main
                 }
                 for (int i = 0; i < students.size(); i++) 
                 {
-                    String fullname = students.get(i).getFullname().toLowerCase();
+                    String name = students.get(i).getFullname().toLowerCase();
                     String mobile = students.get(i).getMobile().toString();
-                    // Complete search
-                    if(text.equals(fullname) || text_phone.equals(mobile)){
-                        isSearchFound = true;
-                        foundID = i;
-                    }
                     // Approch search
                     for(int j = 0; j < text.length(); j++)
                     {
                         try {
-                            if(text.charAt(j) == fullname.charAt(j) || text_phone.charAt(j) == mobile.charAt(j)){
+                            //if(name.length() < text.length() || text_phone.length() < mobile.length()) continue;
+                            
+                            if(text.charAt(j) == name.charAt(j) || text_phone.charAt(j) == mobile.charAt(j)){
                                 isApproached = true;
                             }
                             else{
@@ -405,13 +363,20 @@ public class Main
                         String mobile = students.get(i).getMobile();
                         for (int j = 0; j < text.length(); j++) 
                         {
-                            if(name.charAt(j) == text.charAt(j) || mobile.charAt(j) == text_phone.charAt(j)){
-                                isFound = true;
+                            try {
+                                //if(name.length() < text.length() || text_phone.length() < mobile.length())continue;
+
+                                if(name.charAt(j) == text.charAt(j) || mobile.charAt(j) == text_phone.charAt(j)){
+                                    isFound = true;
+                                }
+                                else{
+                                    isFound = false;
+                                    break;
+                                }
+                            } catch (Exception e2) {
+                                System.out.println(e2);
                             }
-                            else{
-                                isFound = false;
-                                break;
-                            }
+                            
                         }
                         if(isFound){
                             collectUSers.add(students.get(i));
