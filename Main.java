@@ -52,9 +52,6 @@ public class Main
     }
     public static void add_new_row_to_course_model(Course course, DefaultTableModel model)
     {
-        if (course.getNoStudent() == 0) {
-            return;
-        }
         model.addRow(
             new Object[]{
                 course.getCourseName(),
@@ -269,6 +266,70 @@ public class Main
                                     break;
                             }
                         }
+                    }
+                );
+
+                add_student.addActionListener(
+                    new ActionListener(){
+                        @Override
+                        public void actionPerformed(ActionEvent e)
+                        {
+                            try {
+                                Student student = new Student();
+                                student.setId(Integer.parseInt(id_text.getText()));
+
+                                student.setFullname(fullname_text.getText());
+                                student.setAddress(address_text.getText());
+                                student.setMobile(phone_text.getText());
+                                student.setStage(stage.getSelectedIndex()+1);
+
+                                String course_names[] = new String[5];
+                                for (int i = 0; i < course_box.length; i++) 
+                                {
+                                    if(course_box[i].isSelected()){
+                                        course_names[i] = course_box[i].getText();
+                                    }
+                                    else{
+                                        course_names[i] = "none";
+                                        continue;
+                                    }
+                                    for (int j = 0; j < courses.size(); j++) 
+                                    {
+                                        if (courses.get(j).getCourseName().equals(course_names[i]))
+                                        {
+                                            System.out.println(courses.get(j).getCourseName());
+
+                                            courses.get(j).setNoStudent(courses.get(j).getNoStudent() + 1);
+                                        }
+                                    }
+                                }
+                                
+                                student.setCourses(course_names);
+                                
+                                if(Student.id_taken(student.getId(), students)){
+                                    JOptionPane.showMessageDialog(student_window, "ID is already exist !", "Error", JOptionPane.ERROR_MESSAGE);
+                                }
+                                else if(student.getFullname().isEmpty() || student.getAddress().isEmpty() || student.getMobile().isEmpty()){
+                                        JOptionPane.showMessageDialog(student_window, "please fill all informations!", "Warning", JOptionPane.WARNING_MESSAGE);
+                                }
+                                else{
+                                    students.add(student);
+                                    if (file_name.isEmpty()) {
+                                        Writer.import_data(file_name, student.toString());
+                                        
+                                    }else{
+                                        Writer.import_data(file_name, "\n" + student.toString());
+                                    }
+
+                                    Course.update_courses(course_file_name, courses);
+                                    JOptionPane.showMessageDialog(student_window, "Added new student Successfuly !");
+                                    id_text.setText("0");
+                                    student_window.dispose();
+                                }
+                            } catch (Exception e2) {
+                                JOptionPane.showMessageDialog(student_window, "ID Must be number !", "Warning", JOptionPane.WARNING_MESSAGE);
+                            }
+                        } 
                     }
                 );
 

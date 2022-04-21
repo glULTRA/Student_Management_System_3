@@ -53,6 +53,15 @@ public class Student extends Course {
         this.stage = stage;
     }
 
+    public static boolean id_taken(int id, ArrayList<Student> students){
+        for(Student student: students){
+            if(id == student.getId()){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static void update_student_data(String path, ArrayList<Student> students){
         Writer.clear_data(path);
         for (Student student : students)

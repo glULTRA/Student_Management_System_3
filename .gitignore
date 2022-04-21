@@ -1,1 +1,5 @@
 *.xd
+*.cpp
+.vscode
+Test.java
+*.o

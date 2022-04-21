@@ -8,10 +8,10 @@ public class Course
     String courses[] = {"null", "null", "null", "null", "null"};
     private int no_student;
     private String course_name;
-    static final String stage_1_courses[] = {"FIS", "C++", "AutoCad", "Computer Organization", "English"};
+    static final String stage_1_courses[] = {"FIS", "Cpp", "AutoCad", "Computer_Organization", "English"};
     static final String stage_2_courses[] = {"Photoshop", "Java", "AdobeXD", "Web-design", "Assembly"};
-    static final String stage_3_courses[] = {"Network", "Data Structures", "Adobe after effect", "Data base", "SQL"};
-    static final String stage_4_courses[] = {"Network Advanced", "IS", "Blender", "Machine Learning", "Oracle"};
+    static final String stage_3_courses[] = {"Network", "Data_Structures", "Adobe_after_effect", "Data_base", "SQL"};
+    static final String stage_4_courses[] = {"Network_Advanced", "IS", "Blender", "Machine_Learning", "Oracle"};
 
     Course(){}
     public void setCourses(String[] courses){
@@ -37,6 +37,13 @@ public class Course
 
     public String getCourseName(){
         return this.course_name;
+    }
+
+    public static void update_courses(String file, ArrayList<Course> courses ){
+        Writer.clear_data(file);
+        for (Course course : courses) {
+            Writer.import_data(file,  course.getNoStudent() + "," + course.getCourseName());
+        }   
     }
 
     public String  toString(){

@@ -70,15 +70,18 @@ public class Reader
     public static void load_course_file(ArrayList<Course> courses,String course_file){
         try {
             String course_data = reader(course_file);
-            String []course_data_array = course_data.split(",");
+            String []course_data_array = course_data.split("[, \n]");
             int j = 0;
             for (int i = 0; i < course_data_array.length/2; i++) 
             {
                 Course course = new Course();
-                course.setCourseName(course_data_array[j++]);
                 course.setNoStudent(Integer.parseInt(course_data_array[j++]));
+                course.setCourseName(course_data_array[j++]);
+                
                 courses.add(course);
             }
+
+            
 
         } catch (Exception e) {
 
