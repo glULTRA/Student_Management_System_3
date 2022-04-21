@@ -35,7 +35,7 @@ public class Main
     public static String titles[] = {"ID", "Fullname", "Address", "Stage", "Mobile"};
     public static DefaultTableModel model = new DefaultTableModel(titles, 0);
     public static final String file_name = "students.csv";
-    public static final String course_file_name = "courses.txt";
+    public static final String course_file_name = "courses.csv";
     public static String course_titles[] = {"Courses", "Number of students"};
     public static DefaultTableModel course_model = new DefaultTableModel(course_titles, 0);
 
@@ -158,6 +158,41 @@ public class Main
 
         Tpanel.add(scrollPane);
 
+         // tap2
+         JPanel tap2 = new JPanel();
+         tap2.setBackground(new Color(6, 154, 142));
+         tap2.setLayout(null);
+ 
+ 
+         // Table container
+         JTable table2 = new JTable(course_model){
+             public boolean isCellEditable(int rowIndex, int colIndex) {
+                 return false; //Disallow the editing of any cell
+             }
+         };
+         table2.setBackground(new Color(161, 227, 216));
+         table2.getTableHeader().setBackground(new Color(210, 252, 245));
+         table2.setFillsViewportHeight(true);
+         table2.setShowGrid(false);
+         table2.setIntercellSpacing(new Dimension(0, 0));
+         table2.putClientProperty("terminateEditOnFocusLost", true);
+         table2.isCellEditable(0, 1);
+         table2.setSelectionBackground(new Color(247, 255, 147));
+         table2.getColumnModel().getColumn(1).setCellRenderer( centerRenderer );
+         
+         Design.font(table2.getTableHeader(), 17);
+         Design.font(table2, 17);
+ 
+ 
+         // Scroll panel for table
+         JScrollPane scrollPane2 = new JScrollPane(table2);
+         JPanel Tpanel2=new JPanel();
+         Tpanel2.setBounds(0, 0, 541, 360);
+         Tpanel2.setLayout(new BorderLayout());
+         Tpanel2.setBorder(null);
+ 
+         Tpanel2.add(scrollPane2);
+
         // Edit Button
         JButton save_button = new JButton("Save");
         Design.font(save_button, 17);
@@ -170,6 +205,33 @@ public class Main
             @Override
             public void actionPerformed(ActionEvent e) {
                 table.getSelectionModel().clearSelection();
+                // Save progress
+                Object infos = new Object();
+                for (int i = 0; i < model.getRowCount(); i++) 
+                {
+                    for (int j = 0; j < model.getColumnCount(); j++)
+                    {
+                        infos = model.getValueAt(i, j);
+                        if(j == 0)
+                        {
+                            int id =Integer.parseInt(infos.toString()); 
+                            students.get(i).setId(id);
+                        }else if(j == 1){
+                            students.get(i).setFullname(infos.toString());
+                        }else if(j == 2){
+                            students.get(i).setAddress(infos.toString());
+                        }else if(j == 3){
+                            students.get(i).setMobile(infos.toString());
+                        }else if(j == 4){
+                            students.get(i).setStage(Integer.parseInt(infos.toString()));
+                        }
+                    }
+                    Student.update_student_data(file_name, students);
+                }
+                save_button.setVisible(false);
+                table.getSelectionModel().clearSelection();
+                JOptionPane.showMessageDialog(window, "Saved successfuly!");
+                return;
             }
         });
 
@@ -184,6 +246,40 @@ public class Main
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Delete selected item.
+                try {
+                    int selected_item = table.getSelectedRow();
+                    Object selected_id = table.getModel().getValueAt(selected_item, 0);
+                    int id = Integer.parseInt(selected_id.toString());
+
+                    if(JOptionPane.showConfirmDialog(window, "Do u want to delete ", "Delete!", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
+                    {
+                        for (Student st: students) {
+                            if(st.getId() == id){
+                                students.remove(st);
+                                for (int i = 0; i < courses.size(); i++) {
+                                    for (int j = 0; j < st.courses.length; j++) {
+                                        if(courses.get(i).getCourseName().contains(st.courses[j])){
+                                            courses.get(i).setNoStudent(courses.get(i).getNoStudent()-1);
+                                        }
+                                    }
+                                }
+                                break;
+                            }
+                        }
+                        
+                        Student.update_student_data(file_name, students);
+                        Course.update_courses(course_file_name, courses);
+                        course_model.getDataVector().removeAllElements();
+                        for (Course course: courses) {
+                            add_new_row_to_course_model(course, course_model);
+                        }
+                        save_button.setVisible(false);
+                        model.removeRow(selected_item);
+                    }
+                } 
+                catch (Exception e2) {
+                    System.out.println(e2);
+                }
             }
         });
 
@@ -199,7 +295,7 @@ public class Main
                 @Override
                 public void focusLost(FocusEvent e) {
                     // TODO Auto-generated method stub
-                    table.getSelectionModel().clearSelection();
+                   // table.getSelectionModel().clearSelection();
                     //save_button.setVisible(false);
                     
                 }
@@ -221,40 +317,7 @@ public class Main
         );
         
 
-        // tap2
-        JPanel tap2 = new JPanel();
-        tap2.setBackground(new Color(6, 154, 142));
-        tap2.setLayout(null);
-
-
-        // Table container
-        JTable table2 = new JTable(course_model){
-            public boolean isCellEditable(int rowIndex, int colIndex) {
-                return false; //Disallow the editing of any cell
-            }
-        };
-        table2.setBackground(new Color(161, 227, 216));
-        table2.getTableHeader().setBackground(new Color(210, 252, 245));
-        table2.setFillsViewportHeight(true);
-        table2.setShowGrid(false);
-        table2.setIntercellSpacing(new Dimension(0, 0));
-        table2.putClientProperty("terminateEditOnFocusLost", true);
-        table2.isCellEditable(0, 1);
-        table2.setSelectionBackground(new Color(247, 255, 147));
-        table2.getColumnModel().getColumn(1).setCellRenderer( centerRenderer );
-        
-        Design.font(table2.getTableHeader(), 17);
-        Design.font(table2, 17);
-
-
-        // Scroll panel for table
-        JScrollPane scrollPane2 = new JScrollPane(table2);
-        JPanel Tpanel2=new JPanel();
-        Tpanel2.setBounds(0, 0, 541, 360);
-        Tpanel2.setLayout(new BorderLayout());
-        Tpanel2.setBorder(null);
-
-        Tpanel2.add(scrollPane2);
+       
 
 
 

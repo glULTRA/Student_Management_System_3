@@ -63,9 +63,15 @@ public class Student extends Course {
     }
 
     public static void update_student_data(String path, ArrayList<Student> students){
+        String data = "";
+        for (int i = 0; i < students.size(); i++) {
+            if(i != students.size()-1)
+                data +=  students.get(i).toString() + "\n";
+            else
+                data +=  students.get(i).toString();
+        }
         Writer.clear_data(path);
-        for (Student student : students)
-            Writer.import_data(path, student.toString());
+        Writer.import_data(path, data);
     }
 
     @Override
