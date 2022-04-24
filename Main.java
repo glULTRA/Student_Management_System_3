@@ -63,8 +63,6 @@ public class Main
         Reader.load_from_file(students, file_name);
         Reader.load_course_file(courses, course_file_name);
 
-        System.out.println(courses.size());
-
         // Adding the data from ArrayList to table.
         for (int i = 0; i < students.size(); i++){
             add_new_row_to_model(students.get(i), model);
